@@ -12,7 +12,7 @@ def get_mystery_function():
 
     return mystery_func, mystery_func_prime
 
-def get_complicated_mystery_function():
+def get_higher_order_mystery_function():
     '''x = Symbol('x')
     sign = np.random.choice([1, -1])
     mystery_func = (np.random.randint(10, 200)*x+np.random.randint(100000, 500000)*sign)**2 + np.random.randint(1, 500)*x + np.random.randint(1, 400)
@@ -24,7 +24,7 @@ def get_complicated_mystery_function():
     mystery_func_prime = mystery_func.diff(x)
     mystery_func = lambdify(x, mystery_func)
     mystery_func_prime = lambdify(x, mystery_func_prime)
-    
+
     return mystery_func, mystery_func_prime
 
 def get_actual_minimum(mystery_func):
@@ -47,3 +47,6 @@ def try_guesses(mystery_func, n_guesses=10, deriv = None):
         if not our_minimum or current_val < our_minimum:
             our_minimum = current_val
     return our_minimum, guesses
+
+def get_multivariable_function():
+    pass
