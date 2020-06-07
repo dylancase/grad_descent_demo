@@ -1,6 +1,7 @@
 from sympy import Symbol, diff, lambdify
 import numpy as np
 from scipy.optimize import minimize
+import matplotlib.pyplot as plt
 
 def get_mystery_function():
     x = Symbol('x')
@@ -20,7 +21,7 @@ def get_higher_order_mystery_function():
     mystery_func = lambdify(x, mystery_func)
     mystery_func_prime = lambdify(x, mystery_func_prime)'''
     x = Symbol('x')
-    mystery_func = (x-7)**4 - 5 * x**3 + 5 * x**2 - 6
+    mystery_func = x**4 + 5 * x**3 - 3 * x**2 - 20*x + 50
     mystery_func_prime = mystery_func.diff(x)
     mystery_func = lambdify(x, mystery_func)
     mystery_func_prime = lambdify(x, mystery_func_prime)
@@ -29,7 +30,7 @@ def get_higher_order_mystery_function():
 
 def get_actual_minimum(mystery_func):
     fit = minimize(mystery_func, x0 = 0)
-    print(f"Minimum of {fit['fun']:.2e} at x = {fit['x'][0]:.2f}")
+    print(f"Minimum of {fit['fun']:.2f} at x = {fit['x'][0]:.2f}")
     return fit['fun'], fit['x'][0]
 
 def try_guesses(mystery_func, n_guesses=10, deriv = None):
@@ -50,3 +51,23 @@ def try_guesses(mystery_func, n_guesses=10, deriv = None):
 
 def get_multivariable_function():
     pass
+
+def plot_guesses(guesses, function, title = None):
+    fig, ax = plt.subplots(figsize = (10, 5))
+    ax.scatter(guesses, [function(guess) for guess in guesses], color = 'r')
+    x = np.linspace(np.min(guesses), np.max(guesses))
+    ax.plot(x, function(x))
+    ax.set_xlabel('x', size = 20)
+    ax.set_ylabel('f(x)', size = 20)
+    if title:
+        ax.set_title(title)
+    return ax
+
+def plot_near_min(guesses, function, actual_min, x_min, x_range = 100, y_range=10000):
+    fig, ax = plt.subplots(figsize = (10, 5))
+    ax.scatter(guesses, [function(guess) for guess in guesses], color = 'r')
+    x = np.linspace(np.min(guesses), np.max(guesses), 1000000)
+    ax.plot(x, function(x))
+    ax.set_xlim(x_min - x_range, x_min + x_range)
+    ax.set_ylim(actual_min-y_range/100, actual_min + y_range)
+    return ax
