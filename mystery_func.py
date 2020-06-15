@@ -71,3 +71,56 @@ def plot_near_min(guesses, function, actual_min, x_min, x_range = 100, y_range=1
     ax.set_xlim(x_min - x_range, x_min + x_range)
     ax.set_ylim(actual_min-y_range/100, actual_min + y_range)
     return ax
+
+def plot_3D_gradient_descent(losses, guesses):    
+    plt.figure(figsize=(12, 6))
+    ax = plt.axes(projection='3d')
+
+    # Data for three-dimensional scattered points
+    zdata = np.log(losses)
+    xdata = guesses[:, 0]
+    ydata = guesses[:, 1]
+    ax.scatter3D(xdata, ydata, zdata, c=zdata, cmap='Reds')
+
+    ax.set_xlabel('B_1')
+    ax.set_ylabel('B_2')
+    ax.set_zlabel('Loss')
+
+    ax.view_init(30, 60)
+    return ax
+
+def plot_3D_loss(loss_func):
+    x = np.linspace(-100, 100, 100)
+    y = np.linspace(0, 160, 100)
+
+    X, Y = np.meshgrid(x, y)
+    Z = loss_func(X, Y)
+
+    fig = plt.figure(figsize = (12, 6))
+    ax = plt.axes(projection='3d')
+    ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
+                    cmap='viridis', edgecolor='none')
+    ax.set_title('surface')
+    ax.view_init(30, 60)
+    return ax
+
+def multi_var_guesses(loss_func, loss_func_B_1_prime, loss_func_B_2_prime):
+    #fig, ax = plt.subplots(figsize = (12, 6))
+    our_guesses = []
+    our_losses = []
+    for _ in range(10):
+        num1 = float(input("Enter a number:"))
+        num2 = float(input("Enter another number:"))
+        #ax.scatter(num1, num2)
+        #ax.annotate(f'{loss_func(num1, num2):.2e}',(num1, num2))
+        #ax.plot([num1, num1-loss_func_B_1_prime(num1, num2)], [num2, num2 - loss_func_B_2_prime(num1, num2)])
+        #ax.arrow(num1, num2, -loss_func_B_1_prime(num1, num2)*.001, -loss_func_B_2_prime(num1, num2)*.001, head_width=10)
+        #ax.set_xlim(-200, 200)
+        #ax.set_ylim(-200, 200)
+        #display.display(plt.gcf())
+        print(f"Loss is {loss_func(num1, num2):.2e}")
+        print(f"Negative Gradient is: {[-loss_func_B_1_prime(num1, num2), -loss_func_B_2_prime(num1, num2)]}")
+        our_guesses.append(np.array([num1, num2]))
+        our_losses.append(loss_func(num1, num2))
+        #display.clear_output(wait=True)
+    return our_guesses, our_losses
